@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday! 🎂</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Poppins', Arial, sans-serif;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3, #a18cd1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.card {
+    width: 100%;
+    max-width: 500px;
+    padding: 40px 25px;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.17);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    animation: appear 1s ease;
+    z-index: 2;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+h1 {
+    font-size: clamp(2rem, 8vw, 3rem);
+    margin-bottom: 15px;
+    text-shadow: 2px 3px 10px rgba(0,0,0,0.2);
+}
+
+.name {
+    color: #fff4a3;
+    font-size: clamp(2rem, 8vw, 2.8rem);
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.cake {
+    font-size: 90px;
+    margin: 15px 0;
+    animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.message {
+    font-size: 17px;
+    line-height: 1.8;
+    margin: 20px 0;
+}
+
+button {
+    border: none;
+    background: #fff;
+    color: #ff4f81;
+    padding: 15px 30px;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+button:hover {
+    transform: scale(1.08);
+    background: #fff4a3;
+}
+
+.footer {
+    margin-top: 25px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Floating balloons */
+.balloon {
+    position: fixed;
+    bottom: -150px;
+    font-size: 45px;
+    animation: floatUp 9s linear infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.balloon:nth-child(2) { left: 10%; animation-delay: 1s; }
+.balloon:nth-child(3) { left: 80%; animation-delay: 3s; }
+.balloon:nth-child(4) { left: 25%; animation-delay: 5s; }
+.balloon:nth-child(5) { left: 90%; animation-delay: 2s; }
+
+@keyframes floatUp {
+    from { transform: translateY(0) rotate(0); }
+    to { transform: translateY(-120vh) rotate(25deg); }
+}
+
+/* Confetti canvas */
+#confetti {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+<div class="balloon">🎈</div>
+
+<div class="card">
+    <h1>🎉 Happy Birthday! 🎉</h1>
+
+    <!-- Change the name below -->
+    <div class="name">Dear Birthday Star ❤️</div>
+
+    <div class="cake">🎂</div>
+
+    <p class="message">
+        May your special day be filled with
+        endless happiness, beautiful memories,
+        laughter and lots of love! 💖
+        <br><br>
+        May all your dreams come true.
+        Keep smiling and shining always! ✨
+    </p>
+
+    <button onclick="celebrate()">
+        🎊 Celebrate! 🎊
+    </button>
+
+    <div class="footer">
+        Made with ❤️ just for you!
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+let pieces = [];
+
+function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+function createConfetti() {
+    for (let i = 0; i < 180; i++) {
+        pieces.push({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * -window.innerHeight,
+            size: Math.random() * 8 + 4,
+            speed: Math.random() * 4 + 2,
+            color: [
+                "#ffeb3b",
+                "#ff4081",
+                "#00e5ff",
+                "#ffffff",
+                "#76ff03",
+                "#ff9100"
+            ][Math.floor(Math.random() * 6)],
+            rotation: Math.random() * 360
+        });
+    }
+}
+
+function animateConfetti() {
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    pieces.forEach((p, index) => {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+        ctx.restore();
+
+        p.y += p.speed;
+        p.x += Math.sin(p.y / 30);
+        p.rotation += 3;
+
+        if (p.y > window.innerHeight + 20) {
+            pieces.splice(index, 1);
+        }
+    });
+
+    requestAnimationFrame(animateConfetti);
+}
+
+function celebrate() {
+    createConfetti();
+
+    const button = document.querySelector("button");
+    button.innerHTML = "🎉 Happy Birthday Rukhsar!!! ❤️";
+
+    setTimeout(() => {
+        button.innerHTML = "🎊 Celebrate Again! 🎊";
+    }, 2000);
+}
+
+// Initial celebration
+createConfetti();
+animateConfetti();
+</script>
+
+</body>
+</html>
